@@ -99,7 +99,57 @@ const articulos = sequelize.define(
   }
 );
 
+//HACER ESTO PARA LA TABLA CLIENTES GORRIADO
+const clientes = sequelize.define(
+  "clientes",
+  {
+    IdCliente: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    ApellidoYNombre: {
+      type: DataTypes.STRING(60),
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          args: true,
+          msg: "ApellidoYNombre es requerido",
+        },
+        len: {
+          args: [5, 60],
+          msg: "ApellidoYNombre debe ser tipo carateres, entre 5 y 60 de longitud",
+        },
+      },
+      unique: {
+        args: true,
+        msg: "este Nombre ya existe en la tabla!",
+      },
+    },
+    DNI: { 
+      type: DataTypes.INTEGER(13),
+      allowNull: false,
+    },
+
+    
+  },
+  {
+    // pasar a mayusculas
+    hooks: {
+      beforeValidate: function (cliente, options) {
+        if (typeof cliente.ApellidoYNombre === "string") {
+          cliente.ApellidoYNombre = cliente.ApellidoYNombre.toUpperCase().trim();
+        }
+      },
+    },
+
+    timestamps: false,
+  }
+);
+
 module.exports = {
   sequelize,
   articulos,
+  //Exportar la tabla clientes GORRIADO
+  clientes,
 };
